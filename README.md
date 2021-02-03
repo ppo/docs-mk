@@ -10,7 +10,7 @@ Template and CLI tool to manage a standalone [MkDocs](https://www.mkdocs.org/) d
 In your project folder, clone this project (or fork it first)…
 
 ```
-git clone git@github.com:ppo/docsmk.git .
+git clone git@github.com:ppo/docsmk.git docsmk
 ./docsmk/docsmk install
 ```
 
