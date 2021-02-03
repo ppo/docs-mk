@@ -23,8 +23,19 @@ git clone git@github.com:ppo/docsmk.git .
 #### Remark
 
 If you plan to keep it versioned, don't forget to either:
-- Delete the .git directory of this project: `rm -fr ./docsmk/.git`
-- Change it to your repository: `cd docsmk; git remote set-url origin git@example.com:<YOU>/<YOUR_REPO>.git`
+
+1) Delete the .git directory of this project:
+
+```
+rm -fr ./docsmk/.git
+```
+
+2) Change it to your repository:
+
+```
+cd docsmk
+git remote set-url origin git@example.com:<YOU>/<YOUR_REPO>.git
+```
 
 
 ## Usage
