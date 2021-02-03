@@ -1,0 +1,45 @@
+# Doc: https://www.mkdocs.org/user-guide/configuration/
+
+site_name: "DocsMk"
+site_description: "Standalone MkDocs."
+site_author: "Pascal Polleunus <pascal+github@polleunus.be>"
+repo_url: https://github.com/ppo/docsmk
+repo_name: "GitHub: ppo/docsmk"
+extra:
+  version: 0.1
+
+nav:
+  - Home: index.md
+  # - Section:
+  #   - Overview: section/index.md
+
+theme:
+  name: material  # Doc: https://squidfunk.github.io/mkdocs-material/
+  palette:
+    scheme: slate
+    primary: teal
+    accent: yellow
+
+# extra_css:
+#   - css/custom.css
+
+# Ref: https://squidfunk.github.io/mkdocs-material/reference/abbreviations/
+# Ref: https://python-markdown.github.io/extensions/
+# markdown_extensions:
+#   - admonition
+#   - codehilite:
+#       guess_lang: false
+#   - pymdownx.critic
+#   - pymdownx.emoji:
+#       emoji_index: !!python/name:materialx.emoji.twemoji
+#       emoji_generator: !!python/name:materialx.emoji.to_svg
+#   - pymdownx.highlight
+#   - pymdownx.mark
+#   - pymdownx.superfences
+
+plugins:
+  - search
+
+docs_dir: ../docs
+site_dir: build
+# dev_addr: "127.0.0.1:8000"
