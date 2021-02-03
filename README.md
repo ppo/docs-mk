@@ -14,12 +14,14 @@ git clone git@github.com:ppo/docsmk.git .
 ./docsmk/docsmk install
 ```
 
-**This will:**
+#### This will
+
 - Create a Python3 virtualenv (`python3 -m venv ./docsmk/.venv`).
 - Install the required pip packages (see `requirements.txt`).
 - Create the documentation directory (`./docs`); unless it already exists.
 
-**Remark:**  
+#### Remark
+
 If you plan to keep it versioned, don't forget to either:
 - Delete the .git directory of this project: `rm -fr ./docsmk/.git`
 - Change it to your repository: `cd docsmk; git remote set-url origin git@example.com:<YOU>/<YOUR_REPO>.git`
