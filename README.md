@@ -65,7 +65,7 @@ Usage: docsmk [COMMAND=serve]
 And it will be automatically rebuild when changes are committed to the repository.
 
 
-**Known Problem:**
+#### Known problem
 
 If you don't see the projects of an organization in RTD, you've to explicitely grant them access
 to that organization.
@@ -73,7 +73,7 @@ See [Requesting organization approval for OAuth Apps](https://docs.github.com/en
 _([information found here](https://github.com/readthedocs/readthedocs.org/issues/2044#issuecomment-405940573))_
 
 
-**Documentation:**
+#### Documentation
 
 - [Importing Your Documentation](https://docs.readthedocs.io/en/stable/intro/import-guide.html)
 - [Configuration File](https://docs.readthedocs.io/en/stable/config-file/index.html)
