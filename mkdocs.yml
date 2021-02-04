@@ -36,10 +36,12 @@ theme:
 #   - pymdownx.highlight
 #   - pymdownx.mark
 #   - pymdownx.superfences
+#  - toc:
+#      permalink: true
 
 plugins:
   - search
 
+# Relative to this file.
 docs_dir: ../docs
 site_dir: build
-# dev_addr: "127.0.0.1:8000"

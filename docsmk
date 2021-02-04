@@ -105,7 +105,7 @@ function do_uninstall() {
 
 function do_help() {
   echo
-  print_heading "DocsMk Usage: \e[0;34mdocsmk\e[0m [\e[0;36mCOMMAND\e[0m=\e[0;32mserve\e[0m]"
+  print_heading "DocsMk Usage:\e[0m docsmk [\e[0;36mCOMMAND\e[0m=\e[0;32mserve\e[0m]"
   echo
   printf "  \e[0;36mserve\e[0m      Run the local server to preview the documentation.\n"
   printf "  \e[0;36mbuild\e[0m      Build the documentation.\n"
