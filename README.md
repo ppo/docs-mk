@@ -53,6 +53,33 @@ Usage: docsmk [COMMAND=serve]
 ```
 
 
+## Deployment
+
+### Read The Docs
+
+1. Move the `.readthedocs.yml` file to the root of your repository. No modifications required.
+2. Import your project via [your dashboard on RTD](https://readthedocs.org/dashboard/).
+3. That's it! The building process starts automatically.
+   Click on “your documentation is building” to follow its progress.
+
+And it will be automatically rebuild when changes are committed to the repository.
+
+
+**Known Problem:**
+
+If you don't see the projects of an organization in RTD, you've to explicitely grant them access
+to that organization.
+See [Requesting organization approval for OAuth Apps](https://docs.github.com/en/github/setting-up-and-managing-your-github-user-account/requesting-organization-approval-for-oauth-apps).
+_([information found here](https://github.com/readthedocs/readthedocs.org/issues/2044#issuecomment-405940573))_
+
+
+**Documentation:**
+
+- [Importing Your Documentation](https://docs.readthedocs.io/en/stable/intro/import-guide.html)
+- [Configuration File](https://docs.readthedocs.io/en/stable/config-file/index.html)
+- [Incoming Webhooks and Automation](https://docs.readthedocs.io/en/stable/webhooks.html)
+
+
 ## License
 
 This project is licensed under the [MIT License](https://choosealicense.com/licenses/mit/).  
