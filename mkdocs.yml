@@ -6,6 +6,7 @@ site_author: "Pascal Polleunus <pascal+github@polleunus.be>"
 repo_url: https://github.com/ppo/docsmk
 repo_name: "GitHub: ppo/docsmk"
 extra:
+  # Version of the documentation (usually the same as the project without the `patch` part).
   version: 0.1
 
 nav:
@@ -36,8 +37,8 @@ theme:
 #   - pymdownx.highlight
 #   - pymdownx.mark
 #   - pymdownx.superfences
-#  - toc:
-#      permalink: true
+#   - toc:
+#       permalink: true
 
 plugins:
   - search

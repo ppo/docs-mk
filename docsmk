@@ -37,7 +37,7 @@ function activate_venv() {
 
   if [ ! -d "$VENV_DIR" ]; then
     print_error "DocsMk is not installed."
-    printf "\e[1;33mInstall it?\e[0m (press y or to proceed) "
+    printf "\e[1;33mInstall it?\e[0m (press y or enter to proceed) "
     read -s -n 1 answer; echo
     if [ -z "$answer" ] || [ "$answer" = "y" ]
       then do_install

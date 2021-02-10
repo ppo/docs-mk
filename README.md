@@ -35,6 +35,8 @@ rm -fr ./docsmk/.git/
 ./docsmk/docsmk install
 ```
 
+Update `mkdocs.yml` according to your project.
+
 
 **This will:**
 
