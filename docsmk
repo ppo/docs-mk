@@ -61,13 +61,13 @@ function do_build() {
   activate_venv
   print_heading "Building documentation..."
   mkdocs build --config-file="$MKDOCS_CONFIG"
-  print_success "created in \e[0;36m${DOCS_BUILD_DIR}\e[0m"
+  (($? == 0)) && print_success "created in \e[0;36m${DOCS_BUILD_DIR}\e[0m"
 }
 
 function do_clean() {
   print_heading "Cleaning documentation build..."
   rm -fr "$DOCS_BUILD_DIR"
-  print_success
+  (($? == 0)) && print_success
 }
 
 function do_install() {
@@ -84,8 +84,10 @@ function do_install() {
   if [ ! -d "$DOCS_DIR" ]; then
     print_heading "Creating documentation directory..."
     mkdir "$DOCS_DIR"
-    echo "# Your DocsMk is ready!" > "${DOCS_DIR}/index.md"
-    print_success "created: \e[0;36m${DOCS_DIR}\e[0m"
+    if (($? == 0)); then
+      echo "# Your DocsMk is ready!" > "${DOCS_DIR}/index.md"
+      print_success "created: \e[0;36m${DOCS_DIR}\e[0m"
+    fi
   fi
 }
 
@@ -93,14 +95,14 @@ function do_upgrade() {
   activate_venv
   print_heading "Upgrading DocsMk..."
   pip install --upgrade -r "${MKDOCS_DIR}/requirements.txt"
-  print_success "upgraded."
+  (($? == 0)) && print_success "upgraded."
 }
 
 function do_uninstall() {
   print_heading "Uninstalling DocsMk..."
   [ -n "$VIRTUAL_ENV" ] && deactivate
   rm -fr "$VENV_DIR"
-  print_success "uninstalled."
+  (($? == 0)) && print_success "uninstalled."
 }
 
 function do_help() {
