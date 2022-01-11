@@ -57,12 +57,12 @@ Update `mkdocs.yml` according to your project.
 4. RTD will automatically rebuild the documentation when changes are committed to the repository.
 
 
-#### Known Problem
+#### Known Problems
 
-If you don’t see the projects of an organization in RTD, you’ve to explicitely grant them access
-to that organization.
-See [Requesting organization approval for OAuth Apps](https://docs.github.com/en/github/setting-up-and-managing-your-github-user-account/requesting-organization-approval-for-oauth-apps).
-_([information found here](https://github.com/readthedocs/readthedocs.org/issues/2044#issuecomment-405940573))_
+- If you don’t see the projects of an organization in RTD, you’ve to explicitely grant them access
+  to that organization.
+    - See [Requesting organization approval for OAuth Apps](https://docs.github.com/en/github/setting-up-and-managing-your-github-user-account/requesting-organization-approval-for-oauth-apps).
+    - _([information found here](https://github.com/readthedocs/readthedocs.org/issues/2044#issuecomment-405940573))_
 
 
 #### Documentation
