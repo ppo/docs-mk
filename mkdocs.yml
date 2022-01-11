@@ -2,7 +2,7 @@
 
 site_name: "DocsMk"
 site_description: "Standalone MkDocs."
-site_author: "Pascal Polleunus <pascal+github@polleunus.be>"
+site_author: "Pascal Polleunus <pascal+docsmk@polleunus.be>"
 repo_url: https://github.com/ppo/docsmk
 repo_name: "GitHub: ppo/docsmk"
 extra:
@@ -44,5 +44,10 @@ plugins:
   - search
 
 # Relative to this file.
-docs_dir: ../docs
+docs_dir: src
 site_dir: build
+
+# Configuration for rsync deployment.
+# Note: Files are transfered INTO the `deploy_dest` folder. The parent folder must exist.
+# deploy_dest: user@host:path/to/docs
+# deploy_url: https://example.com/path/to/docs

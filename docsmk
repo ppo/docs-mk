@@ -7,41 +7,66 @@
 #   serve      Run the local server to preview the documentation.
 #   build      Build the documentation.
 #   clean      Remove the build directory.
+#   config     Show settings for this helper.
+#   deploy     Deploy build directory via rsync.
+#              It executes `build` before and `clean` after.
 #   install    Create a virtualenv and install pip packages.
 #   upgrade    Upgrade the pip packages.
 #   uninstall  Remove the virtualenv.
 #   help       Show this usage.
 
 
+# KISS Colors (v1): https://github.com/ppo/bash-colors/blob/master/kiss-colors.sh
+if ((`tput colors` >= 8)); then
+  readonly reset="\e[0m"       # Uppercase = bold.
+  readonly black="\e[0;30m";   readonly BLACK="\e[1;30m"
+  readonly red="\e[0;31m";     readonly RED="\e[1;31m"
+  readonly green="\e[0;32m";   readonly GREEN="\e[1;32m"
+  readonly yellow="\e[0;33m";  readonly YELLOW="\e[1;33m"
+  readonly blue="\e[0;34m";    readonly BLUE="\e[1;34m"
+  readonly magenta="\e[0;35m"; readonly MAGENTA="\e[1;35m"
+  readonly cyan="\e[0;36m";    readonly CYAN="\e[1;36m"
+  readonly white="\e[0;37m";   readonly WHITE="\e[1;37m"
+fi
+
+function heading() { printf "\n${WHITE}${1}${reset}\n"; }
+function warning() { printf "${magenta}Warning: ${1}${reset}\n"; }
+function error() { printf "${red}ERROR: ${1}${reset}\n"; }
+function success() { printf "${green}${1:-Successfully done.}${reset}\n"; }
+function abort() { printf "${RED}Abort. ${1}${reset}\n"; exit; }
+#/KISS Colors
+
+
 if [ -z "$( which realpath )" ]; then
-  function realpath() { echo "$( cd "${1}" >/dev/null 2>&1 && pwd )"; }
+  function realpath() { [ -d "${1}" ] && printf "$( cd "${1}" >/dev/null 2>&1 && pwd )" || printf "${1}"; }
 fi
 
 readonly __FILE__="$( readlink -f "${BASH_SOURCE[0]}" )"
-readonly MKDOCS_DIR="$( realpath "$( dirname "${__FILE__}" )" )"
-readonly BASE_DIR="$( realpath "${MKDOCS_DIR}/.." )"
-readonly MKDOCS_CONFIG="${MKDOCS_DIR}/mkdocs.yml"
-readonly VENV_DIR="${MKDOCS_DIR}/.venv"
-readonly DOCS_DIR="${BASE_DIR}/docs"
-readonly DOCS_BUILD_DIR="${MKDOCS_DIR}/build"
+readonly __DIR__="$( realpath "$( dirname "${__FILE__}" )" )"
+readonly VENV_DIR="${__DIR__}/.venv"
 
+# Using MkDocs config.
+readonly MKDOCS_CONFIG="${__DIR__}/mkdocs.yml"
+[ -f "$MKDOCS_CONFIG" ] || abort "MkDocs config not found at ${MKDOCS_CONFIG}"
 
-function print_heading() { printf "\e[1;37m${1}\e[0m\n"; }
-function print_error() { printf "\e[0;31mERROR: ${1}\e[0m\n"; }
-function print_success() { printf "\e[0;32mSuccessfully ${1:-done.}\e[0m\n"; }
-function abort() { printf "Abort. ${1}"; exit; }
+function get_config() { cat "$MKDOCS_CONFIG" | awk "/^${1}:/ {print \$2}" || "$2"; }
+readonly SRC_DIR="$( realpath "${__DIR__}/$( get_config "docs_dir" "src" )" )"
+readonly BUILD_DIR="$( realpath "${__DIR__}/$( get_config "site_dir" "build" )" )"
+readonly DEPLOY_DEST="$( get_config "deploy_dest" )"
+readonly DEPLOY_URL="$( get_config "deploy_url" )"
+
 
 function activate_venv() {
   [ "$VIRTUAL_ENV" = "$VENV_DIR" ] && return
   [ -n "$VIRTUAL_ENV" ] && { source "${VIRTUAL_ENV}/bin/activate"; deactivate; }
 
   if [ ! -d "$VENV_DIR" ]; then
-    print_error "DocsMk is not installed."
-    printf "\e[1;33mInstall it?\e[0m (press y or enter to proceed) "
+    error "DocsMk is not installed."
+    printf "${YELLOW}Install it?${reset} (press y or enter to proceed) "
     read -s -n 1 answer; echo
     if [ -z "$answer" ] || [ "$answer" = "y" ]
       then do_install
-      else abort "To install it later, execute: \e[0;36mdocsmk install\e[0m"
+      else abort "To install it later, execute: ${cyan}docsmk install${reset}"
     fi
   fi
 
@@ -52,71 +77,99 @@ function do_serve() {
   activate_venv
   local dev_addr="$( grep "^dev_addr:" "$MKDOCS_CONFIG" | sed "s/dev_addr://;s/['\" ]//g" )"
   [ -z "$dev_addr" ] && dev_addr="127.0.0.1:8000"
-  print_heading "Serving documentation on \e[1;33mhttp://${dev_addr}"
-  printf "\e[0;36mPress Ctrl+C to quit.\e[0m\n"
+  heading "Serving documentation on ${YELLOW}http://${dev_addr}"
+  printf "${cyan}Press Ctrl+C to quit.${reset}\n"
   mkdocs serve --config-file="$MKDOCS_CONFIG"
 }
 
 function do_build() {
   activate_venv
-  print_heading "Building documentation..."
+  heading "Building documentation…"
   mkdocs build --config-file="$MKDOCS_CONFIG"
-  (($? == 0)) && print_success "created in \e[0;36m${DOCS_BUILD_DIR}\e[0m"
+  if (( $? == 0 )); then
+    success "Successfully created in ${cyan}${BUILD_DIR}${reset}"
+    printf "Open in browser: ${YELLOW}file://${BUILD_DIR}/index.html${reset}\n"
+  fi
 }
 
 function do_clean() {
-  print_heading "Cleaning documentation build..."
-  rm -fr "$DOCS_BUILD_DIR"
-  (($? == 0)) && print_success
+  heading "Cleaning documentation build…"
+  rm -fr "$BUILD_DIR"
+  (( $? == 0 )) && success
+}
+
+function do_config() {
+  heading "DocsMk Config:"
+  echo
+  printf "  ${cyan}Root${reset}                ${green}${__DIR__}${reset}\n"
+  printf "  ${cyan}Virtual Env${reset}         ${green}${VENV_DIR}${reset}\n"
+  printf "  ${cyan}MkDocs Config${reset}       ${green}${MKDOCS_CONFIG}${reset}\n"
+  printf "  ${cyan}Doc Sources${reset}         ${green}${SRC_DIR}${reset}\n"
+  printf "  ${cyan}Build Dir${reset}           ${green}${BUILD_DIR}${reset}\n"
+  printf "  ${cyan}Deploy Destination${reset}  ${green}${DEPLOY_DEST}${reset}\n"
+  printf "  ${cyan}Deploy URL${reset}          ${green}${DEPLOY_URL}${reset}\n"
+}
+
+function do_deploy() {
+  do_build
+  (( $? == 0 )) || return
+  heading "Rsync'ing documentation to ${DEPLOY_URL}…"
+  rsync -aurz --delete "${BUILD_DIR%/}/" "${DEPLOY_DEST%/}/"
+  if (( $? == 0 )); then
+    success
+    printf "Open in browser: ${YELLOW}${DEPLOY_URL}${reset}\n"
+    do_clean
+  fi
 }
 
 function do_install() {
   [ -d "$VENV_DIR" ] && abort "DocsMk already installed."
 
   local bin_dir="${VENV_DIR}/bin"
-  print_heading "Installing DocsMk..."
+  heading "Installing DocsMk…"
   python3 -m venv "$VENV_DIR"
   activate_venv
-  ln -s "$( realpath --relative-to="$bin_dir" "${MKDOCS_DIR}/docsmk" )" "$bin_dir"
+  ln -s "$( realpath --relative-to="$bin_dir" "${__DIR__}/docsmk" )" "$bin_dir"
 
   do_upgrade
 
-  if [ ! -d "$DOCS_DIR" ]; then
-    print_heading "Creating documentation directory..."
-    mkdir "$DOCS_DIR"
-    if (($? == 0)); then
-      echo "# Your DocsMk is ready!" > "${DOCS_DIR}/index.md"
-      print_success "created: \e[0;36m${DOCS_DIR}\e[0m"
+  if [ ! -d "$SRC_DIR" ]; then
+    heading "Creating documentation directory…"
+    mkdir "$SRC_DIR"
+    if (( $? == 0 )); then
+      printf "# Your DocsMk is ready!" > "${SRC_DIR}/index.md\n"
+      success "Successfully created: ${cyan}${SRC_DIR}${reset}"
     fi
   fi
 }
 
 function do_upgrade() {
   activate_venv
-  print_heading "Upgrading DocsMk..."
-  pip install --upgrade -r "${MKDOCS_DIR}/requirements.txt"
-  (($? == 0)) && print_success "upgraded."
+  heading "Upgrading DocsMk…"
+  pip install --upgrade -r "${__DIR__}/requirements.txt"
+  (( $? == 0 )) && success "Successfully upgraded."
 }
 
 function do_uninstall() {
-  print_heading "Uninstalling DocsMk..."
+  heading "Uninstalling DocsMk…"
   [ -n "$VIRTUAL_ENV" ] && deactivate
   rm -fr "$VENV_DIR"
-  (($? == 0)) && print_success "uninstalled."
+  (( $? == 0 )) && success "Successfully uninstalled."
 }
 
 function do_help() {
+  heading "DocsMk Usage:${reset} docsmk [${cyan}COMMAND${reset}=${green}serve${reset}]"
   echo
-  print_heading "DocsMk Usage:\e[0m docsmk [\e[0;36mCOMMAND\e[0m=\e[0;32mserve\e[0m]"
-  echo
-  printf "  \e[0;36mserve\e[0m      Run the local server to preview the documentation.\n"
-  printf "  \e[0;36mbuild\e[0m      Build the documentation.\n"
-  printf "  \e[0;36mclean\e[0m      Remove the build directory.\n"
-  printf "  \e[0;36minstall\e[0m    Create a virtualenv and install pip packages.\n"
-  printf "  \e[0;36mupgrade\e[0m    Upgrade the pip packages.\n"
-  printf "  \e[0;36muninstall\e[0m  Remove the virtualenv.\n"
-  printf "  \e[0;36mhelp\e[0m       Show this usage.\n"
-  echo
+  printf "  ${cyan}serve${reset}      Run the local server to preview the documentation.\n"
+  printf "  ${cyan}build${reset}      Build the documentation.\n"
+  printf "  ${cyan}clean${reset}      Remove the build directory.\n"
+  printf "  ${cyan}config${reset}     Show settings for this helper.\n"
+  printf "  ${cyan}deploy${reset}     Deploy build directory via rsync.\n"
+  printf "             It executes ${cyan}build${reset} before and ${cyan}clean${reset} after.\n"
+  printf "  ${cyan}install${reset}    Create a virtualenv and install pip packages.\n"
+  printf "  ${cyan}upgrade${reset}    Upgrade the pip packages.\n"
+  printf "  ${cyan}uninstall${reset}  Remove the virtualenv.\n"
+  printf "  ${cyan}help${reset}       Show this usage.\n"
 }
 
 
@@ -124,9 +177,12 @@ case "$1" in
   ""|"serve") do_serve;;
   "build") do_build;;
   "clean") do_clean;;
+  "config") do_config;;
+  "deploy") do_deploy;;
   "install") do_install;;
   "upgrade") do_upgrade;;
   "uninstall") do_uninstall;;
   "help") do_help;;
-  *) echo; print_error "Unknown command '\e[0;36m${1}\e[0;31m'."; do_help;;
+  *) echo; error "Unknown command '${cyan}${1}${red}'."; do_help;;
 esac
+echo
