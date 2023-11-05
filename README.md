@@ -27,23 +27,24 @@ Usage: docsmk [COMMAND=serve]
 
 > _**Requirements:** Python 3, Git, Bash._
 
-In your project folder, execute this:
+In your project folder, execute the following to:
+
+- Copy the DocsMk template (cloning this repo and deleting its `.git` folder).
 
 ```
 git clone git@github.com:ppo/docsmk.git
 rm -fr ./docsmk/.git/
-./docsmk/docsmk install
 ```
 
-Update `mkdocs.yml` according to your project.
+Then update `mkdocs.yml` according to your project, and execute the following to:
 
-
-**This will:**
-
-- Copy the template (cloning this repo and deleting its `.git` folder).
 - Create a Python3 virtualenv (`python3 -m venv ./docsmk/.venv`).
 - Install the required pip packages (see `requirements.txt`).
 - Create the documentation directory (`./docs`); unless it already exists.
+
+```
+./docsmk/docsmk install
+```
 
 
 ## Deployment

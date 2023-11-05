@@ -1,18 +1,27 @@
 # Doc: https://www.mkdocs.org/user-guide/configuration/
 
+# PROJECT INFORMATION
 site_name: "DocsMk"
 site_description: "Standalone MkDocs."
-site_author: "Pascal Polleunus <pascal+docsmk@polleunus.be>"
+site_author: "Pascal Polleunus <pascal+github@polleunus.be>"
 repo_url: https://github.com/ppo/docsmk
 repo_name: "GitHub: ppo/docsmk"
 extra:
   # Version of the documentation (usually the same as the project without the `patch` part).
   version: 0.1
 
+
+# NAVIGATION
 nav:
   - Home: index.md
-  # - Section:
-  #   - Overview: section/index.md
+  #/ - Section:
+  #/   - Overview: section/index.md
+
+
+# BUILD SETTINGS
+# Note: Relative to this file.
+docs_dir: ../docs
+site_dir: build
 
 theme:
   name: material  # Doc: https://squidfunk.github.io/mkdocs-material/
@@ -21,33 +30,34 @@ theme:
     primary: teal
     accent: yellow
 
-# extra_css:
-#   - css/custom.css
+#/ extra_css:
+#/   - css/docsmk.css
 
+
+# FORMATTING OPTIONS
 # Ref: https://squidfunk.github.io/mkdocs-material/reference/abbreviations/
 # Ref: https://python-markdown.github.io/extensions/
-# markdown_extensions:
-#   - admonition
-#   - codehilite:
-#       guess_lang: false
-#   - pymdownx.critic
-#   - pymdownx.emoji:
-#       emoji_index: !!python/name:materialx.emoji.twemoji
-#       emoji_generator: !!python/name:materialx.emoji.to_svg
-#   - pymdownx.highlight
-#   - pymdownx.mark
-#   - pymdownx.superfences
-#   - toc:
-#       permalink: true
+#/ markdown_extensions:
+#/   - admonition
+#/   - codehilite:
+#/       guess_lang: false
+#/   - pymdownx.critic
+#/   - pymdownx.emoji:
+#/       emoji_index: !!python/name:materialx.emoji.twemoji
+#/       emoji_generator: !!python/name:materialx.emoji.to_svg
+#/   - pymdownx.highlight
+#/   - pymdownx.mark
+#/   - pymdownx.superfences
+#/   - toc:
+#/       permalink: true
 
 plugins:
   - search
 
-# Relative to this file.
-docs_dir: src
-site_dir: build
 
-# Configuration for rsync deployment.
-# Note: Files are transfered INTO the `deploy_dest` folder. The parent folder must exist.
-# deploy_dest: user@host:path/to/docs
-# deploy_url: https://example.com/path/to/docs
+# DEPLOYMENT
+# Destination for rsync. Example: `user@host:/path/to/`.
+#/ deploy_dst:
+
+# Optional. URL displayed after deployment, to easily go there and check.
+#/ deploy_url:
