@@ -148,8 +148,9 @@ function do_deploy() {
 
 function do_install() {
   [ -d "$VENV_DIR" ] && abort "DocsMk already installed."
-
   local bin_dir="${VENV_DIR}/bin"
+  [ -d "${DOCSMK_DIR}/.git" ] && rm -fr "${DOCSMK_DIR}/.git"
+
   heading "Installing DocsMk…"
   python3 -m venv "$VENV_DIR"
   activate_venv

@@ -29,15 +29,15 @@ Usage: docsmk [COMMAND=serve]
 
 In your project folder, execute the following to:
 
-- Copy the DocsMk template (cloning this repo and deleting its `.git` folder).
+- Copy the DocsMk template (cloning this repository).
 
 ```
 git clone git@github.com:ppo/docsmk.git
-rm -fr ./docsmk/.git/
 ```
 
 Then update `mkdocs.yml` according to your project, and execute the following to:
 
+- Remove the `./docsmk/.git` folder.
 - Create a Python3 virtualenv (`python3 -m venv ./docsmk/.venv`).
 - Install the required pip packages (see `requirements.txt`).
 - Create the documentation directory (`./docs`); unless it already exists.
