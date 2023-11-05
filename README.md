@@ -23,7 +23,7 @@ Usage: docsmk [COMMAND=serve]
 ```
 
 
-## Install
+## Installation
 
 > _**Requirements:** Python 3, Git, Bash._
 
